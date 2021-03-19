@@ -1,0 +1,26 @@
+{
+    "Colors" : {
+        "primaryColor" : "#f1f2f6",
+        "secondaryColor" : "#dfe4ea",
+        "primaryActionColor" : "##ff6b6b",
+        "secondaryActionColor": "##ee5253",
+        "disableColor": "#a4b0be"
+    },
+
+    "LightColors" : {
+        "primaryColor" : "#f1f2f6",
+        "secondaryColor" : "#dfe4ea",
+        "primaryActionColor" : "##ff6b6b",
+        "secondaryActionColor": "##ee5253",
+        "disableColor": "#a4b0be"
+    },
+
+    "DarkColors" : {
+        "primaryColor" : "#2f3542",
+        "secondaryColor" : "#57606f",
+        "primaryActionColor": "#00CBCB",
+        "secondaryActionColor": "#00c4c4",
+        "disableColor": "#1a1d24"
+
+    }
+}

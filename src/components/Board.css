@@ -1,0 +1,23 @@
+.board {
+    width: 400px;
+    height: 400px;
+    position: absolute;
+}
+
+.board-icon {
+    margin: 12px;
+}
+
+.board-action-bar {
+    width: 100%;
+    height: fit-content;
+    background-color: aqua;
+    display: flex;
+    justify-content: space-between;
+}
+
+.board-title {
+    width: 90%;
+    height: 100%;
+    overflow: hidden;
+}

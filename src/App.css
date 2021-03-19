@@ -1,0 +1,102 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 8fr 8fr 1.5fr;
+  grid-template-rows: 0.5fr 8fr auto;
+  grid-template-areas: "top-toolbar top-toolbar top-toolbar"
+                        "workplan workplan right-toolbar"
+                        "workplan workplan right-toolbar";
+  height: 100vh;
+  width: 100vw;
+}
+
+.top-toolbar {
+  grid-area: top-toolbar;
+  width: 100%;
+  height: 100%;
+  background-color: #FF00FF;
+}
+
+.workplan {
+  grid-area: workplan;
+  width: 100%;
+  height: 100%;
+  background-color: #FFEE00;
+}
+
+.right-toolbar {
+  grid-area: right-toolbar;
+  width: 100%;
+  height: 100%;
+  background-color: #FF00FF;
+}
+
+
+.main-image {
+  grid-area: image;
+
+  width: 100%;
+  height: 100%;
+  background-position: top center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: hsl(256, 100%, 86%);
+  border-left: 1px solid hsl(256, 100%, 56%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.sidebar-item {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background-color: hsl(256, 100%, 86%);
+  padding: 1rem;
+  position: relative;
+  transition: background-color 150ms;
+}
+
+.sidebar-item:hover, .sidebar-item:focus {
+  background-color: #FFEE00;
+}
+
+.sidebar-item.active {
+  background-color: #FF00FF;
+}
+
+.sidebar-item:after {
+  content: '';
+  position: absolute;
+  width: 80%;
+  left: 10%;
+  bottom: 0;
+  height: 1px;
+  background-color: black;
+}
+
+.sidebar-item:last-child::after {
+  display: none;
+}
+
+.slider-container {
+  background-color: green;
+  margin-top: 2rem;
+  padding: 2rem;
+}
+
+.slider {
+  width: 100%;
+  cursor: pointer;
+}
