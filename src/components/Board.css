@@ -1,11 +1,10 @@
 .board {
-    width: 400px;
-    height: 400px;
     position: absolute;
 }
 
 .board-icon {
     margin: 12px;
+    pointer-events: none;
 }
 
 .board-action-bar {
@@ -20,4 +19,9 @@
     width: 90%;
     height: 100%;
     overflow: hidden;
+    pointer-events: none;
+}
+
+.board-content {
+    background-color: white;
 }
