@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import IconButton from '@material-ui/core/IconButton';
 import Icon from '@material-ui/core/Icon';
 import new_blank from "./icons/new_blank.png" 
@@ -90,34 +90,81 @@ const DEFAULT_OPTIONS = [
 ]
 
 function App() {
+
+
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0)
   const [options, setOptions] = useState(DEFAULT_OPTIONS)
   const selectedOption = options[selectedOptionIndex]
   const [files, setFiles] = useState([])
 
+  const [diffX, setDiffX] = useState(0) 
+  const [diffY, setDiffY] = useState(0) 
+  const [style, setStyle] = useState({})
+  const [dragging, setDragging] = useState(false) 
+  const boardDragged = useRef();
+ /* const boardRefs = useRef([]);
+  boardRefs.current = []*/
+
   const addFile = (file) => {
     setFiles([...files, file])
+   
   }
 
   const onFileUploaded = event => {
+    const input = event.target;
+    if(input.files[0] != undefined) {
+      const reader = new FileReader();
+      reader.onload = function(){
+        const dataURL = reader.result;
+        const file = new Image()
+        file.src = dataURL;
+        file.name = input.files[0].name
+        file.onload = function() {
+          addFile(file)
+        }
 
-    if(event.target.files[0] != undefined) {
-      var file = new Image()
-      file.tempUrl = URL.createObjectURL(event.target.files[0])
-      file.src = file.tempUrl
-      file.name = event.target.files[0].name
-      file.onload = function() {
-        addFile(file)
-      }
+       input.value = null
+
+      };
+      reader.readAsDataURL(input.files[0]);
     }
-    
+
   }
 
   const closeFile = (fileToCloseName) => {
-    setFiles(files.filter(file => file.name !== fileToCloseName))
+    var fileToRemove = files.filter(file => file.name == fileToCloseName)[0]
+    var index = files.indexOf(fileToRemove)
+    files.splice(index, 1)
+    setFiles([...files])
   }
-  
-  function handleSliderChange({target}) {
+
+const onDragStart = event => {
+
+  boardDragged.current = event.target.parentNode
+  setDiffX(event.screenX - event.target.parentNode.offsetLeft)
+  setDiffY(event.screenY - event.target.parentNode.offsetTop)
+  setDragging(true)
+}
+
+const onDragEnd = event => {
+  if(dragging){
+    boardDragged.current = null
+    setDragging(false)
+  }
+}
+
+const onDragging = event => {
+  if(dragging) {
+    var left = event.screenX - diffX
+    var top = event.screenY - diffY
+
+    boardDragged.current.style.left = left + "px"
+    boardDragged.current.style.top = top + "px"
+  }
+}
+
+//PHOTOSHOP OPTIONS
+  /*function handleSliderChange({target}) {
     setOptions(prevOptions => {
       return prevOptions.map((option, index) => {
         if(index != selectedOptionIndex) return option
@@ -133,18 +180,20 @@ function App() {
 
     return {filter : filters.join(' ')}
 
-  }
+  }*/
 
-  function showBoard(file) {
-    if(file.src != undefined) {
-      return <Board file={file}/>
-    } else {
-      return null
+  /*function addBoards(boardRef) {
+    console.log(boardRef)
+    if(boardRef && !boardRefs.current.includes(boardRef) && boardRefs.current.length < files.length) {
+      boardRefs.current.push(boardRef)
     }
-  }
+    console.log(boardRefs.current)
+    console.log(files.length)
+  }*/
+
 
   return (
-    <div className="container">
+    <div className="container" onMouseMove={onDragging} onMouseUp={onDragEnd}>
       <div className="top-toolbar">
         <IconButton>
           <img src={new_blank} height={25} width={25}/>
@@ -161,7 +210,8 @@ function App() {
       <div className="right-toolbar"></div>
       <div className="workplan">
         { files.map(file => {
-          return <Board file={file} closeAction={closeFile}/>
+          console.log("LOOP ON")
+          return <Board file={file} closeAction={closeFile} onDragStart={onDragStart}/>
         })}
         <div className="main-image" >
         </div>
