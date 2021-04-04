@@ -1,5 +1,7 @@
 .board {
     position: absolute;
+    min-width: 120px;
+    min-height: 120px;
 }
 
 .board-icon {
@@ -9,6 +11,7 @@
 
 .board-action-bar {
     width: 100%;
+    min-width: 120px;
     height: fit-content;
     background-color: aqua;
     display: flex;
@@ -24,4 +27,6 @@
 
 .board-content {
     background-color: white;
+    min-width: 120px;
+    min-height: 70px;
 }
