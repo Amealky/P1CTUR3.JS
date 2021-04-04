@@ -1,0 +1,9 @@
+.dialog-content{
+    display: flex;
+    justify-content: space-between;
+}
+
+.dialog-content > * {
+    margin-left: 10px !important;
+    margin-bottom: 10px !important;
+}
