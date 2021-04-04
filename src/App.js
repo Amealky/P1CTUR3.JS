@@ -7,6 +7,7 @@ import open_pic from "./icons/open_pic.png"
 
 import './App.css';
 import Board from './components/Board';
+import NewBoardForm from './components/NewBoardForm';
 import Slider from './Slider';
 import SideBarItem from './SideBarItem';
 
@@ -91,7 +92,7 @@ const DEFAULT_OPTIONS = [
 
 function App() {
 
-
+  const [showModal, setShowModal] = useState(false)
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0)
   const [options, setOptions] = useState(DEFAULT_OPTIONS)
   const selectedOption = options[selectedOptionIndex]
@@ -104,6 +105,24 @@ function App() {
   const boardDragged = useRef();
  /* const boardRefs = useRef([]);
   boardRefs.current = []*/
+
+
+  const openNewBoardForm = () => {
+    setShowModal(prev => !prev)
+  }
+
+  const openNewBoard = (width, height, name) => {
+    const file = new Image()
+    file.width = width
+    file.height = height
+    if(name == "") {
+      const number = files.length + 1
+      name = "Nouveau (" + number+ ")" 
+    }
+    file.name = name
+    addFile(file)
+  }
+
 
   const addFile = (file) => {
     setFiles([...files, file])
@@ -194,8 +213,12 @@ const onDragging = event => {
 
   return (
     <div className="container" onMouseMove={onDragging} onMouseUp={onDragEnd}>
+    
+      <NewBoardForm showModal={showModal} setShowModal={setShowModal} openNewBoard={openNewBoard}/>
+        
       <div className="top-toolbar">
-        <IconButton>
+
+        <IconButton onClick={openNewBoardForm}>
           <img src={new_blank} height={25} width={25}/>
         </IconButton>
 
