@@ -7,68 +7,46 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import { SlideProps } from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import './NewBoardForm.css';
 import { Height } from "@material-ui/icons";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = React.forwardRef<unknown, SlideProps>(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
-export default function NewBoardForm({showModal, setShowModal, openNewBoard}){ 
+export default function NewBoardForm(props: {
+  showModal: boolean,
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>, 
+  openNewBoard: (width: number, height: number, name: string) => void}){ 
 
-    const [width, setWidth] = useState(1)
-    const [height, setHeight] = useState(1)
+  /* {
+  file: HTMLImageElement, 
+  closeAction: (fileToCloseName: string) => void,
+  onDragStart: (event: React.MouseEvent) => void,
+  onBoardSelected: (event: React.MouseEvent) => void}, 
+  ref) => {*/
+    const [width, setWidth] = useState(300)
+    const [height, setHeight] = useState(300)
     const [name, setName] = useState("")
 
-    /*const modalRefBackground = useRef();
-
-   const animation = useSpring({
-        config: {
-            duration: 250
-        },
-        opacity: showModal ? 1 : 0,
-        transform: showModal ? 'translateY(-10%)' : 'translateY(-100%)'
-    }) 
-
-    const closeModal = event => {
-        if(event.target == modalRefBackground.current){
-            setShowModal(false)
-        }
-    }
-
-    const keyPress = useCallback(e => {
-        console.log(e)
-        if(e.key === 'Escape' && showModal){
-            setShowModal(false)
-        }
-    }, [setShowModal, showModal])
-
-
-    useEffect(() => {
-        if(showModal){
-            document.addEventListener('keydown', keyPress);
-        }
-        return  () => document.removeEventListener('keydown', keyPress)
-    }, [keyPress])*/
-
-
   const handleClose = () => {
-    setHeight(1)
-    setWidth(1)
+    setHeight(300)
+    setWidth(300)
     setName("")
-    setShowModal(false);
+    props.setShowModal(false)
   };
 
   const createNewBoard= () => {
     handleClose()
-    openNewBoard(width, height, name)
+    props.openNewBoard(width, height, name)
   }
 
 
     return (
         <Dialog
-        open={showModal}
+        open={props.showModal}
         TransitionComponent={Transition}
         onClose={handleClose}>
         <DialogTitle id="alert-dialog-slide-title">Nouveau Dessin</DialogTitle>
@@ -80,7 +58,7 @@ export default function NewBoardForm({showModal, setShowModal, openNewBoard}){
                 value={width}  
                 type="number" 
                 variant="outlined" 
-                onChange={event => setWidth(event.target.value)}
+                onChange={event => setWidth(+event.target.value)}
                 error={width == 0}/>
 
                 <TextField id="outlined-basic" 
@@ -88,11 +66,11 @@ export default function NewBoardForm({showModal, setShowModal, openNewBoard}){
                 value={height}
                 type="number"
                 variant="outlined"
-                onChange={event => setHeight(event.target.value)}
+                onChange={event => setHeight(+event.target.value)}
                 error={height == 0} />
 
             </div>
-            
+
             <div className="dialog-content">
                 <TextField id="outlined-basic" 
                 label="Nom ( Optionnel )"

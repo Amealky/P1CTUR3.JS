@@ -26,7 +26,13 @@
 }
 
 .board-content {
-    background-color: white;
+    background-color: gray;
     min-width: 120px;
     min-height: 70px;
+}
+
+.board-content-canvas {
+    background-color: white;
+    cursor: url('../icons/new_blank.png'), auto;
+    overflow: auto;
 }

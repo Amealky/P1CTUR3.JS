@@ -5,6 +5,8 @@ import Icon from '@material-ui/core/Icon';
 import new_blank from "./icons/new_blank.png" 
 import open_pic from "./icons/open_pic.png"
 
+import {HTMLInputEvent} from "./extensions/extensions";
+
 import './App.css';
 import Board from './components/Board';
 import NewBoardForm from './components/NewBoardForm';
@@ -96,13 +98,13 @@ function App() {
   const [selectedOptionIndex, setSelectedOptionIndex] = useState(0)
   const [options, setOptions] = useState(DEFAULT_OPTIONS)
   const selectedOption = options[selectedOptionIndex]
-  const [files, setFiles] = useState([])
+  const [files, setFiles] = useState<Array<HTMLImageElement>>([])
 
   const [diffX, setDiffX] = useState(0) 
   const [diffY, setDiffY] = useState(0) 
   const [style, setStyle] = useState({})
   const [dragging, setDragging] = useState(false) 
-  const boardDragged = useRef();
+  const boardDragged = useRef<EventTarget>();
  /* const boardRefs = useRef([]);
   boardRefs.current = []*/
 
@@ -111,7 +113,7 @@ function App() {
     setShowModal(prev => !prev)
   }
 
-  const openNewBoard = (width, height, name) => {
+  const openNewBoard = (width:number, height:number, name:string) => {
     const file = new Image()
     file.width = width
     file.height = height
@@ -124,61 +126,64 @@ function App() {
   }
 
 
-  const addFile = (file) => {
+  const addFile = (file: HTMLImageElement) => {
     setFiles([...files, file])
-   
   }
 
-  const onFileUploaded = event => {
-    const input = event.target;
-    if(input.files[0] != undefined) {
-      const reader = new FileReader();
-      reader.onload = function(){
-        const dataURL = reader.result;
-        const file = new Image()
-        file.src = dataURL;
-        file.name = input.files[0].name
-        file.onload = function() {
-          addFile(file)
-        }
-
-       input.value = null
-
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-
+  const onFileUploaded = (event: React.FormEvent<HTMLInputElement>) => {
+    const input = event.target as HTMLInputElement;
+      if(input.files?.[0] !== undefined) {
+        const reader = new FileReader();
+        reader.onload = function(){
+          const dataURL = reader.result as string;
+          const file = new Image()
+          file.src = dataURL;
+          file.name = input.files![0].name
+          file.onload = function() {
+            addFile(file)
+          }
+  
+         input.value = "null"
+  
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
   }
 
-  const closeFile = (fileToCloseName) => {
+  const closeFile = (fileToCloseName: string) => {
     var fileToRemove = files.filter(file => file.name == fileToCloseName)[0]
     var index = files.indexOf(fileToRemove)
     files.splice(index, 1)
     setFiles([...files])
   }
 
-const onDragStart = event => {
 
-  boardDragged.current = event.target.parentNode
-  setDiffX(event.screenX - event.target.parentNode.offsetLeft)
-  setDiffY(event.screenY - event.target.parentNode.offsetTop)
-  setDragging(true)
+const onDragStart = (event: React.MouseEvent) => {
+  if(event.target) {
+    let parentNode =  (event.target as HTMLElement).parentNode as HTMLElement
+    if(parentNode) {
+      setDiffX(event.screenX - parentNode.offsetLeft)
+      setDiffY(event.screenY - parentNode.offsetTop)
+      setDragging(true)
+    }
+  }
 }
 
-const onDragEnd = event => {
+const onDragEnd = (event: React.MouseEvent) => {
   if(dragging){
-    boardDragged.current = null
     setDragging(false)
   }
 }
 
-const onDragging = event => {
+const onDragging = (event: React.MouseEvent) => {
   if(dragging) {
     var left = event.screenX - diffX
     var top = event.screenY - diffY
 
-    boardDragged.current.style.left = left + "px"
-    boardDragged.current.style.top = top + "px"
+    if(boardDragged.current !== undefined) {
+      (boardDragged.current as HTMLElement).style.left = left + "px";
+      (boardDragged.current as HTMLElement).style.top = top + "px";
+    }
   }
 }
 
@@ -209,6 +214,18 @@ const onDragging = event => {
     console.log(boardRefs.current)
     console.log(files.length)
   }*/
+  const onBoardSelected = (event: React.MouseEvent) => {
+    if(event) {
+      if(boardDragged.current != undefined) {
+        (boardDragged.current as HTMLElement).style.zIndex = "1";
+        (event.currentTarget as HTMLElement).style.zIndex = "2";
+      }
+  
+      if(event.currentTarget != undefined) {
+        boardDragged.current = event.currentTarget
+      }
+    }
+  }
 
 
   return (
@@ -234,7 +251,8 @@ const onDragging = event => {
       <div className="workplan">
         { files.map(file => {
           console.log("LOOP ON")
-          return <Board file={file} closeAction={closeFile} onDragStart={onDragStart}/>
+          return <Board file={file} closeAction={closeFile} onDragStart={onDragStart} 
+          onBoardSelected={onBoardSelected}/>
         })}
         <div className="main-image" >
         </div>
